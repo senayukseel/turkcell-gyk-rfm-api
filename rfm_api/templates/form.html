@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>RFM Müşteri Segmentasyonu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #fafafa;
+            text-align: center;
+        }
+        .main-header {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 30px 0 24px 0;
+            margin-bottom: 22px;
+        }
+        .logo-area {
+            height: 160px; 
+        }
+        .main-header {
+        height: 120px; /* Navbar yüksekliği sabit kalır */
+        }
+        .main-card {
+            border-radius: 16px;
+            box-shadow: 0 6px 30px 0 rgba(0,0,0,0.08);
+            background: #fff;
+            padding: 40px 32px;
+            
+        }
+        .rfm-label {
+            color: #555;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+        }
+        .btn-turkc-purple {
+            background: #8d168d;
+            color: #fff;
+            border-radius: 20px;
+            font-weight: 600;
+            padding: 10px 32px;
+            border: none;
+            transition: background 0.2s;
+        }
+        .btn-turkc-purple:hover {
+            background: #808080;
+        }
+        .footer {
+            margin-top: 10px;
+            color: #888;
+            font-size: 1em;
+            text-align: center;
+            padding: 24px 0 12px 0;
+            background: transparent;
+            letter-spacing: 1px;
+        }
+        .divider {
+            border-bottom: 2px solid #ececec;
+            margin: 10px 0 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Üst Bar -->
+    <div class="main-header d-flex justify-content-between align-items-center px-5">
+        <div>
+            <!-- Boş bırakabilirsin veya sol ikon ekleyebilirsin -->
+        </div>
+        <div>
+            <img src="/static/turkcell_logo.png" alt="Turkcell Logo" class="logo-area"/>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span style="opacity:0.5;">&#9681;</span>
+            <span style="font-size:1em; color:#888;">PAIR-1</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="mb-2" style="letter-spacing:1px; font-weight: 700; color:#333;">RFM MÜŞTERİ SEGMENTASYONU</h2>
+        <div class="divider"></div>
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="main-card mx-auto">
+                    <div class="mb-3" style="font-size:1.1em;">RFM Tahmini için değerleri giriniz.</div>
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    <form method="post" action="/predict" autocomplete="off">
+                        <div class="mb-3">
+                            <label for="recency" class="form-label rfm-label">RECENCY</label>
+                            <input type="number" name="recency" step="0.01" required value="{{ recency if recency is not none else '' }}" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="frequency" class="form-label rfm-label">FREQUENCY</label>
+                            <input type="number" name="frequency" step="0.01" required value="{{ frequency if frequency is not none else '' }}" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="monetary" class="form-label rfm-label">MONETARY</label>
+                            <input type="number" name="monetary" step="0.01" required value="{{ monetary if monetary is not none else '' }}" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-turkc-purple">TAHMİN ET</button>
+                        </div>
+                    </form>
+                    {% if cluster is not none %}
+                        <div class="alert alert-info mt-4" role="alert">
+                            <h4 class="alert-heading">Tahmin Edilen Grup: {{ cluster }}</h4>
+                            <p>{{ cluster_profile }}</p>
+                        </div>
+                    {% endif %}
+                    {% if graph_url %}
+                        <div class="mt-4">
+                            
+                            <img src="{{ graph_url }}" class="img-fluid" alt="Küme Dağılımı Pie Chart">
+                        </div>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        TURKCELL GELECEĞİ YAZAN KADINLAR - PAIR-1 - 2025
+    </div>
+</body>
+</html>
